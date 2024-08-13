@@ -1,0 +1,35 @@
+Tech stack: React.js
+
+Assessment Task: Secure File Storage System
+
+Objective: Build a secure file storage system where files are encrypted using AES encryption before being stored on the server and decrypted when retrieved.
+
+Requirements:
+
+Setup:
+
+Create a Node.js application using Express.js for the server.
+Use MongoDB for storing file metadata (filename, file size, upload date, encrypted file path, etc.).
+File Upload Endpoint:
+
+Implement an endpoint (POST /upload) to handle file uploads.
+Encrypt the file using AES-256-CBC before saving it to the server's file system.
+Save the file name as metadata in MongoDB, including the path to the encrypted file.
+File Download Endpoint:
+
+Implement an endpoint (GET /download/:fileId) to handle file downloads.
+Decrypt the file before sending it back to the client.
+The client should receive the original file, not the encrypted one.
+Encryption and Decryption:
+
+Use AES-256-CBC for encryption and decryption.
+Store the encryption key and initialization vector (IV) securely. Do not hardcode them in your code.
+Implement proper error handling for encryption and decryption failures.
+Authentication:
+
+Add a basic authentication mechanism (e.g., JWT) to ensure that only authorized users can upload and download files.
+Security Considerations:
+
+Ensure that the encryption key and IV are not exposed in any logs or error messages.
+Validate file types and sizes to prevent malicious uploads.
+Implement rate limiting to prevent abuse of the upload and download endpoints.
