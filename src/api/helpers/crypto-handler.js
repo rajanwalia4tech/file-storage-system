@@ -10,28 +10,11 @@ class CryptoHandler{
     async encryptFile(buffer){
         const cipher = crypto.createCipheriv(this.algorithm, this.key, this.iv);
         let encrypted = Buffer.concat([cipher.update(buffer), cipher.final()]);
-        const data = {
-            iv: this.iv.toString('hex'),
-            encryptedData: encrypted.toString('hex')
-        };
-        console.log(data);
-        return data.encryptedData;
-
-        // const cipher = crypto.createCipheriv("aes-256-cbc", this.key, this.iv);
-        // let encrypted = cipher.update(Buffer.from(buffer, 'utf8'));
-        // encrypted = Buffer.concat([encrypted, cipher.final()]);
-        // console
-        // const data = {
-        //     iv: this.iv.toString('hex'),
-        //     encryptedData: encrypted.toString('hex')
-        // };
-        // console.log(data);
-        // return data.encryptedData;
+        return encrypted.toString('hex');
     };
   
     async decryptFile(encryptedText){
         try {
-            const iv = Buffer.from(this.iv, 'hex');             // Convert IV back to a Buffer
             const encryptedBuffer = Buffer.from(encryptedText, 'hex'); // Convert encrypted data back to a Buffer
             const decipher = crypto.createDecipheriv(this.algorithm, this.key, this.iv);
             const decrypted = Buffer.concat([decipher.update(encryptedBuffer), decipher.final()]);

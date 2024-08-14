@@ -54,6 +54,7 @@ class FileHandler{
             txt: 'text/plain',
             pdf: 'application/pdf',
             jpg: 'image/jpeg',
+            webp : 'image/webp',
             png: 'image/png',
             mp4: 'video/mp4',
             // Add more as needed

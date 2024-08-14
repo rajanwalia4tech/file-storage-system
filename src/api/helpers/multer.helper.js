@@ -31,12 +31,10 @@ const uploadAndEncryptFile = async (req, res, next) => {
 
       // Add the file path to the request object for further processing
       req.file.relativePath = relativePath;
-      req.file.filename = "sds"
-
       // Proceed to the next middleware or route handler
       next();
     } catch (error) {
-      console.error('Error encrypting file:', error);
+      console.error('Error uploadAndEncryptFile', error);
       throw error;
     }
   });

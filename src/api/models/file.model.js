@@ -1,13 +1,9 @@
 const mongoose = require('mongoose');
 
 const fileSchema = new mongoose.Schema({
-  _id: {
-    type: mongoose.Schema.Types.ObjectId,
-    default: () => new mongoose.Types.ObjectId(),
-  },
-  fileName:{
-    type: String, // this is the file name on the server
-    required: true,
+  uploadBy: {
+    type: mongoose.Schema.Types.ObjectId, // _id of the user's collection
+    ref : "User"
   },
   filePath: {
     type: String, // this is the file path on the server.
@@ -32,15 +28,7 @@ const fileSchema = new mongoose.Schema({
   uploadDate: {
     type: Date,
     default: Date.now,
-  },
-  uploadBy: {
-    type: String, // userId who has uploaded this.
-    required: true,
-  },
-  downloadCount: {
-    type: Number,
-    default: 0,
-  },
+  }
 });
 
 // TODO: need to add the error fields

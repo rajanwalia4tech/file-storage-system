@@ -9,8 +9,8 @@ class FileRepository{
         return newFile;
     }
 
-    async fetchByFileId(fileId){
-        const data = await File.findById(fileId,{filePath:1,fileName:1}).lean();
+    async fetchByFileId(fileId, userId){
+        const data = await File.findOne({_id : fileId, uploadBy : userId},{filePath:1,fileName:1}).lean();
         return data;
     }
 }
