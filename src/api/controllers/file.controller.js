@@ -21,7 +21,7 @@ class FileController{
             const data = await fileService.downloadFile(fileId,userId);
             // send the response via stream as it is long file
             await fileHandler.readFileStream(res, data.filePath, data.decryptedFile);
-
+            return true;
         }catch(err){
             console.error("Error while downloadFile : ",err.message);
             return res.status(400).send({success:false, message : err.message});

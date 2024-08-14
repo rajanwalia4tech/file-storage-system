@@ -6,19 +6,17 @@ const upload = multer({ storage });
 const cryptoHandler = require("./crypto-handler.js");
 const fileHandler = require("./file-handler.helper.js");
 
-// Helper to handle file upload and encryption
 const uploadAndEncryptFile = async (req, res, next) => {
   upload.single('documentFile')(req, res, async (err) => {
     if (err) {
-      return res.status(500).send('Error uploading file.');
+      return res.status(500).send({success: false, message : 'Please upload the file in documentFile key in form multipart'});
     }
 
     if (!req.file) {
-      return res.status(400).send('No file uploaded.');
+      return res.status(400).send({ success: false, message : 'No file uploaded.'});
     }
 
     try {
-      // Encrypt the file buffer
       const encryptedFile = await cryptoHandler.encryptFile(req.file.buffer);
 
       // Create a unique filename and save the encrypted file
@@ -29,9 +27,8 @@ const uploadAndEncryptFile = async (req, res, next) => {
 
       await fileHandler.writeFile(absolutePath, encryptedFile);
 
-      // Add the file path to the request object for further processing
       req.file.relativePath = relativePath;
-      // Proceed to the next middleware or route handler
+
       next();
     } catch (error) {
       console.error('Error uploadAndEncryptFile', error);
