@@ -109,6 +109,8 @@ The goal of this project is to build a secure file storage system where files ar
 2. **GET file/download/:fileId**:
    - Download a file by `fileId`. The file is decrypted on the server before being sent to the client.
 
+### Postman Collection
+- [collection link](file-system-storage.postman_collection.json)
 
 ## Security Best Practices
 
