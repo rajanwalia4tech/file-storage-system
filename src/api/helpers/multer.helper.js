@@ -4,6 +4,7 @@ const path = require('path');
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 const cryptoHandler = require("./crypto-handler.js");
+const fileHandler = require("./file-handler.helper.js");
 
 // Helper to handle file upload and encryption
 const uploadAndEncryptFile = async (req, res, next) => {
@@ -26,7 +27,7 @@ const uploadAndEncryptFile = async (req, res, next) => {
 
       const relativePath = "/uploads/"+filename;
 
-      fs.writeFileSync(absolutePath, encryptedFile);
+      await fileHandler.writeFile(absolutePath, encryptedFile);
 
       // Add the file path to the request object for further processing
       req.file.relativePath = relativePath;
@@ -36,7 +37,7 @@ const uploadAndEncryptFile = async (req, res, next) => {
       next();
     } catch (error) {
       console.error('Error encrypting file:', error);
-      res.status(500).send('Error encrypting file.');
+      throw error;
     }
   });
 };

@@ -1,6 +1,6 @@
 const {fileService} = require("../services");
 const path = require("path");
-const fs = require("fs");
+const fileHandler = require("../helpers/file-handler.helper");
 
 class FileController{
     async uploadFile(req,res,next){
@@ -17,23 +17,7 @@ class FileController{
         try{
             const fileId = req.params.fileId;
             const data = await fileService.downloadFile(fileId);
-
-
-            // Set headers to prompt the user to download the file
-            res.setHeader('Content-Disposition', `attachment; filename=${data.fileName}`);
-            res.setHeader('Content-Type', 'application/octet-stream');
-
-            // Create a read stream and pipe it to the response
-            const fileStream = fs.createReadStream(data.absolutePath);
-
-            // Pipe the file stream to the response
-            fileStream.pipe(res);
-
-            // Handle stream errors
-            fileStream.on('error', (error) => {
-                console.error('Error reading file:', error);
-                res.status(500).send('Error reading file.');
-            });
+            await fileHandler.readFileStream(res, data.filePath, data.decryptedFile);
             // return res.status(200).send({data, success:true, message : "File uploaded successfully"});
             // Set headers for the file download
             // res.setHeader('Content-Disposition', `attachment; filename=${path.basename(data.filePath).replace('encrypted_', '')}`);

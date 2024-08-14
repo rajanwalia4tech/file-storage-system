@@ -1,17 +1,44 @@
 const crypto = require("crypto");
 
 class CryptoHandler{
-// AES-256-CBC Encryption and Decryption
+    constructor(){
+        this.algorithm = "aes-256-cbc"
+        this.key = process.env.ENCRYPTION_KEY
+        this.iv = process.env.ENCRYPTION_IV
+    }
+
     async encryptFile(buffer){
-        const cipher = await crypto.createCipheriv('aes-256-cbc', Buffer.from(process.env.ENCRYPTION_KEY), Buffer.from(process.env.IV));
-        const encrypted = await Buffer.concat([cipher.update(buffer), cipher.final()]);
-        return encrypted;
+        const cipher = crypto.createCipheriv(this.algorithm, this.key, this.iv);
+        let encrypted = Buffer.concat([cipher.update(buffer), cipher.final()]);
+        const data = {
+            iv: this.iv.toString('hex'),
+            encryptedData: encrypted.toString('hex')
+        };
+        console.log(data);
+        return data.encryptedData;
+
+        // const cipher = crypto.createCipheriv("aes-256-cbc", this.key, this.iv);
+        // let encrypted = cipher.update(Buffer.from(buffer, 'utf8'));
+        // encrypted = Buffer.concat([encrypted, cipher.final()]);
+        // console
+        // const data = {
+        //     iv: this.iv.toString('hex'),
+        //     encryptedData: encrypted.toString('hex')
+        // };
+        // console.log(data);
+        // return data.encryptedData;
     };
   
-    async decryptFile(buffer){
-        const decipher = await crypto.createDecipheriv('aes-256-cbc', Buffer.from(process.env.ENCRYPTION_KEY), Buffer.from(process.env.IV));
-        const decrypted = await Buffer.concat([decipher.update(buffer), decipher.final()]);
-        return decrypted;
+    async decryptFile(encryptedText){
+        try {
+            const iv = Buffer.from(this.iv, 'hex');             // Convert IV back to a Buffer
+            const encryptedBuffer = Buffer.from(encryptedText, 'hex'); // Convert encrypted data back to a Buffer
+            const decipher = crypto.createDecipheriv(this.algorithm, this.key, this.iv);
+            const decrypted = Buffer.concat([decipher.update(encryptedBuffer), decipher.final()]);
+            return decrypted;
+        } catch (err) {
+            throw new Error(`Decryption failed: ${err.message}`);
+        }
     };
 }
 

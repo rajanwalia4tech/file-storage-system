@@ -10,7 +10,7 @@ class FileRepository{
     }
 
     async fetchByFileId(fileId){
-        const data = await File.findById(fileId,{filePath:1}).lean();
+        const data = await File.findById(fileId,{filePath:1,fileName:1}).lean();
         return data;
     }
 }

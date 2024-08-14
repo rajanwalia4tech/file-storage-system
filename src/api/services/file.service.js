@@ -1,7 +1,7 @@
 const cryptoHandler = require("../helpers/crypto-handler");
 const {fileRepository} = require("../repository");
 const path = require("path");
-const fs = require("fs");
+const fileHandler = require("../helpers/file-handler.helper");
 
 class FileService{
 
@@ -20,27 +20,23 @@ class FileService{
         return {fileId : result};
     }
 
-    async downloadFile(fileId){
+    async downloadFile(fileId, res){
         const fileInfo = await fileRepository.fetchByFileId(fileId);
         if(fileInfo == null){
             throw new Error("File not found");
         }else{
-            const absolutePath = path.join(__dirname, "../../../",fileInfo.filePath);
-            
-            if (!fs.existsSync(absolutePath)) {
-                throw new Error("File not found");
-            }
-        
             try {
+                const absolutePath = path.join(__dirname, "../../../",fileInfo.filePath);
                 // Read the encrypted file from the given path
-                const encryptedFile = fs.readFileSync(absolutePath);
+                const encryptedFile = await fileHandler.readFile(absolutePath);
 
                 // Decrypt the file
                 const decryptedFile = await cryptoHandler.decryptFile(encryptedFile);
+                
                 return {filePath : fileInfo.filePath, absolutePath,  decryptedFile};;
             } catch (error) {
-                console.error('Error decrypting file:', error);
-                throw new Error("Error decrypting file.");
+                console.error('Error in file.service -> downloadFile:', error.message);
+                throw error;
             }
         }
     }
