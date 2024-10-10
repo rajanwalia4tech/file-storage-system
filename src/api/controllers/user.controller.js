@@ -23,6 +23,17 @@ class UserController{
         }
 
     }
+
+    async getUserInfo(req,res){
+        try{
+            const userId = req.user.userId;
+            const response = await userService.getUserInfo(userId);
+            return res.status(200).send(response);
+        }catch(err){
+            console.error("error while getUserInfo ", err.message);
+            return res.status(400).send({success:false,message : err.message});
+        }
+    }
 }
 
 module.exports = new UserController();

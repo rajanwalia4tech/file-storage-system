@@ -27,6 +27,17 @@ class userService{
     async generateToken(userId, name, email){
         return await jwt.sign({userId, name, email}, process.env.JWT_SECRET);
     }
+
+    async getUserInfo(userId){
+        const user = await userRepository.getUserById(userId);
+        return {
+            success:true,
+            data :{
+                user
+            },
+            message : "Fetched the user information successfully"
+        };
+    }
 }
 
 module.exports = new userService();
